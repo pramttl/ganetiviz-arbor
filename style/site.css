@@ -64,6 +64,7 @@ body{
   min-width:100%;
 }
 
+/*
 #nav{
   background:transparent url(logo.png) 40px 0 no-repeat;
   font-style:italic;
@@ -90,38 +91,11 @@ body{
   display:block;
 }
 
+*/
 #grapharea{
   margin:8px 0 0 0;
 }
 
 #grapharea.linkable{
   cursor:pointer;
-}
-
-#footer{
-  color:#333;
-  background:white;
-  position:absolute;
-  bottom:10px;
-  left:160px;
-}
-
-#footer a{
-  text-decoration:none;
-  color:#665;
-}
-
-#footer a:hover{
-  color:#ad621c;
-}
-
-
-.sect{
-    text-transform:uppercase;
-    font-size:12px;
-    font-weight:bold;
-    letter-spacing:1px;
-    color:#998;  
-    border-top:1px solid #998;
-    margin:60px 85px 0 0;  
 }

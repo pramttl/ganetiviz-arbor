@@ -30,6 +30,10 @@ like Apache, Nginx,etc.
 
 2. Visit the directory location in the browser.
 
+# Snapshots
+
+![Unable to Load :(](http://webfuel.co.in/pranjal/test/images/ganetiviz_img1.png "Cluster with 5 nodes")
+
 # Copyright
 
 This work is licensed under a [Creative Commons Attribution-Share Alike 3.0
