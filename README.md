@@ -32,7 +32,7 @@ like Apache, Nginx,etc.
 
 # Snapshots
 
-![Unable to Load :(](http://webfuel.co.in/pranjal/test/images/ganetiviz_img1.png "Cluster with 5 nodes")
+![Unable to Load :(](http://webfuel.co.in/pranjal/test/images/ganetiviz_img2.png "Cluster with 5 nodes")
 
 # Copyright
 
