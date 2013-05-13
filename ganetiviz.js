@@ -52,9 +52,68 @@
 
         gfx.clear()
         sys.eachEdge(function(edge, p1, p2){
-          //ctx.lineWidth = 100;
+
+          // Edges are only to be shown between visible nodes.(source and target alpha both are 1)
           if (edge.source.data.alpha * edge.target.data.alpha == 0) return
-          gfx.line(p1, p2, {stroke:"#b2b19d", width:edge.data.width,length:edge.data.length, alpha:edge.target.data.alpha})
+
+          //// Old way of drawing line, less flexibility.
+          // gfx.line(p1, p2, {stroke:"#b2b19d", width:edge.data.width,length:edge.data.length, alpha:edge.target.data.alpha})
+
+          var width = edge.data.width
+          var color = "#b2b19d"
+          var length = edge.data.length
+
+          //if (!color || (""+color).match(/^[ \t]*$/)) color = null
+          //// find the start point
+          // var tail = intersect_line_box(p1, p2, nodeBoxes[edge.source.name])
+          // var head = intersect_line_box(tail, p2, nodeBoxes[edge.target.name])
+
+          // Slope of the line.
+          var dx = p2.x - p1.x
+          var dy = p2.y - p1.y
+          var lenline = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2))
+          var tanth = dy / dx
+          var costh = dx / lenline
+          var sinth = dy / lenline
+          var tail = p1
+          var head = p2
+
+          // Drawing the line
+          ctx.save() 
+            ctx.beginPath()
+            ctx.lineWidth = (!isNaN(width)) ? parseFloat(width) : width
+            ctx.lineLength = length
+            ctx.strokeStyle = color
+            //ctx.fillStyle = null
+            ctx.moveTo(tail.x, tail.y)
+            ctx.lineTo(head.x, head.y)
+            ctx.stroke()
+          ctx.restore()
+
+
+          // Drawing an Arrow on the edge.
+            ctx.save()
+              // move roughlt to the center position of the edge I drew.
+              var wt = !isNaN(width) ? parseFloat(width) : width
+              var arrowLength = 6 + wt
+              var arrowWidth = 3 + wt
+              ctx.fillStyle = color
+              ctx.translate(tail.x + 0.7*lenline*costh, tail.y + 0.7*lenline*sinth);
+              ctx.rotate(Math.atan2(head.y - tail.y, head.x - tail.x));
+
+              // delete some of the edge that's already there (so the point isn't hidden)
+              ctx.clearRect(-arrowLength/2,-wt/2, arrowLength/2,wt)
+
+              // draw the chevron
+              ctx.beginPath();
+              ctx.moveTo(-arrowLength, arrowWidth);
+              ctx.lineTo(0, 0);
+              ctx.lineTo(-arrowLength, -arrowWidth);
+              ctx.lineTo(-arrowLength * 0.8, -0);
+              ctx.closePath();
+              ctx.fill();
+            ctx.restore()
+
         })
 
         sys.eachNode(function(node, pt){
@@ -247,14 +306,37 @@
     
     return that
   }
-  
-  /*
-  var Nav = function(elt){
-    var dom = $(elt)
-    var _path = null
-    // <Removed_Some_Code: Check backup copy>
-  }
-  */
+
+    // Helpers for figuring out where to draw arrows. Returns a point.
+    var intersect_line_line = function(p1, p2, p3, p4)
+    {
+      var denom = ((p4.y - p3.y)*(p2.x - p1.x) - (p4.x - p3.x)*(p2.y - p1.y));
+      if (denom === 0) return false // lines are parallel
+      var ua = ((p4.x - p3.x)*(p1.y - p3.y) - (p4.y - p3.y)*(p1.x - p3.x)) / denom;
+      var ub = ((p2.x - p1.x)*(p1.y - p3.y) - (p2.y - p1.y)*(p1.x - p3.x)) / denom;
+
+      if (ua < 0 || ua > 1 || ub < 0 || ub > 1)  return false
+      return arbor.Point(p1.x + ua * (p2.x - p1.x), p1.y + ua * (p2.y - p1.y));
+    }
+
+    // 
+    var intersect_line_box = function(p1, p2, boxTuple)
+    {
+      var p3 = {x:boxTuple[0], y:boxTuple[1]},
+          w = boxTuple[2],
+          h = boxTuple[3]
+
+      var tl = {x: p3.x, y: p3.y};
+      var tr = {x: p3.x + w, y: p3.y};
+      var bl = {x: p3.x, y: p3.y + h};
+      var br = {x: p3.x + w, y: p3.y + h};
+
+      return intersect_line_line(p1, p2, tl, tr) ||
+            intersect_line_line(p1, p2, tr, br) ||
+            intersect_line_line(p1, p2, br, bl) ||
+            intersect_line_line(p1, p2, bl, tl) ||
+            false
+    }
 
     var CLR = {
       branch:"#b2b19d",
@@ -387,146 +469,146 @@
 
 
     var GanetiGraphEdges = {
-	    "node1.example.com":{
-		    "instance55.example.com":{length:6},
-		    "instance45.example.com":{length:6},
-		    "instance10.example.com":{length:6},
-		    "instance56.example.com":{length:6},
-		    "instance109.example.com":{length:6},
-		    "instance8.example.com":{length:6},
-		    "instance74.example.com":{length:6},
-		    "instance80.example.com":{length:6},
-		    "instance85.example.com":{length:6},
-		    "instance100.example.com":{length:6},
-		    "instance70.example.com":{length:6},
-		    "instance52.example.com":{length:6},
-		    "instance27.example.com":{length:6},
-		    "instance46.example.com":{length:6},
-		    "instance24.example.com":{length:6},
-		    "instance65.example.com":{length:6},
-		    "instance58.example.com":{length:6},
-		    "instance2.example.com":{length:6},
-		    "instance53.example.com":{length:6},
-		    "instance44.example.com":{length:6},
-		    "node5.example.com":{length:15, width:3},
-		    "node2.example.com":{length:15, width:3},
-		    "node4.example.com":{length:15, width:5},
-		    "node3.example.com":{length:15, width:9},
-	    },
-	    "node2.example.com":{
-		    "instance19.example.com":{length:6},
-		    "instance13.example.com":{length:6},
-		    "instance99.example.com":{length:6},
-		    "instance62.example.com":{length:6},
-		    "instance38.example.com":{length:6},
-		    "instance105.example.com":{length:6},
-		    "instance32.example.com":{length:6},
-		    "instance37.example.com":{length:6},
-		    "instance1.example.com":{length:6},
-		    "instance25.example.com":{length:6},
-		    "instance94.example.com":{length:6},
-		    "instance95.example.com":{length:6},
-		    "instance12.example.com":{length:6},
-		    "instance89.example.com":{length:6},
-		    "instance61.example.com":{length:6},
-		    "instance49.example.com":{length:6},
-		    "instance83.example.com":{length:6},
-		    "instance87.example.com":{length:6},
-		    "instance90.example.com":{length:6},
-		    "instance36.example.com":{length:6},
-		    "instance18.example.com":{length:6},
-		    "instance7.example.com":{length:6},
-		    "instance39.example.com":{length:6},
-		    "instance40.example.com":{length:6},
-		    "instance4.example.com":{length:6},
-		    "node5.example.com":{length:15, width:10},
-		    "node4.example.com":{length:15, width:4},
-		    "node1.example.com":{length:15, width:6},
-		    "node3.example.com":{length:15, width:3},
-	    },
-	    "node3.example.com":{
-		    "instance16.example.com":{length:6},
-		    "instance102.example.com":{length:6},
-		    "instance41.example.com":{length:6},
-		    "instance67.example.com":{length:6},
-		    "instance104.example.com":{length:6},
-		    "instance34.example.com":{length:6},
-		    "instance75.example.com":{length:6},
-		    "instance50.example.com":{length:6},
-		    "instance51.example.com":{length:6},
-		    "instance23.example.com":{length:6},
-		    "instance54.example.com":{length:6},
-		    "instance26.example.com":{length:6},
-		    "instance21.example.com":{length:6},
-		    "instance63.example.com":{length:6},
-		    "instance22.example.com":{length:6},
-		    "instance14.example.com":{length:6},
-		    "instance81.example.com":{length:6},
-		    "instance17.example.com":{length:6},
-		    "instance101.example.com":{length:6},
-		    "instance28.example.com":{length:6},
-		    "node5.example.com":{length:15, width:7},
-		    "node2.example.com":{length:15, width:1},
-		    "node4.example.com":{length:15, width:10},
-		    "node1.example.com":{length:15, width:2},
-	    },
-	    "node4.example.com":{
-		    "instance43.example.com":{length:6},
-		    "instance107.example.com":{length:6},
-		    "instance82.example.com":{length:6},
-		    "instance57.example.com":{length:6},
-		    "instance97.example.com":{length:6},
-		    "instance48.example.com":{length:6},
-		    "instance31.example.com":{length:6},
-		    "instance76.example.com":{length:6},
-		    "instance66.example.com":{length:6},
-		    "instance29.example.com":{length:6},
-		    "instance71.example.com":{length:6},
-		    "instance33.example.com":{length:6},
-		    "instance11.example.com":{length:6},
-		    "instance60.example.com":{length:6},
-		    "instance30.example.com":{length:6},
-		    "instance106.example.com":{length:6},
-		    "instance35.example.com":{length:6},
-		    "instance78.example.com":{length:6},
-		    "node5.example.com":{length:15, width:2},
-		    "node2.example.com":{length:15, width:5},
-		    "node1.example.com":{length:15, width:6},
-		    "node3.example.com":{length:15, width:5},
-	    },
-	    "node5.example.com":{
-		    "instance72.example.com":{length:6},
-		    "instance73.example.com":{length:6},
-		    "instance79.example.com":{length:6},
-		    "instance108.example.com":{length:6},
-		    "instance42.example.com":{length:6},
-		    "instance92.example.com":{length:6},
-		    "instance20.example.com":{length:6},
-		    "instance88.example.com":{length:6},
-		    "instance110.example.com":{length:6},
-		    "instance96.example.com":{length:6},
-		    "instance93.example.com":{length:6},
-		    "instance6.example.com":{length:6},
-		    "instance5.example.com":{length:6},
-		    "instance77.example.com":{length:6},
-		    "instance98.example.com":{length:6},
-		    "instance86.example.com":{length:6},
-		    "instance69.example.com":{length:6},
-		    "instance84.example.com":{length:6},
-		    "instance103.example.com":{length:6},
-		    "instance64.example.com":{length:6},
-		    "instance3.example.com":{length:6},
-		    "instance15.example.com":{length:6},
-		    "instance91.example.com":{length:6},
-		    "instance68.example.com":{length:6},
-		    "instance59.example.com":{length:6},
-		    "instance9.example.com":{length:6},
-		    "instance47.example.com":{length:6},
-		    "node2.example.com":{length:15, width:12},
-		    "node4.example.com":{length:15, width:3},
-		    "node1.example.com":{length:15, width:4},
-		    "node3.example.com":{length:15, width:3},
-	    },
+      "node1.example.com":{
+        "instance55.example.com":{length:6},
+        "instance45.example.com":{length:6},
+        "instance10.example.com":{length:6},
+        "instance56.example.com":{length:6},
+        "instance109.example.com":{length:6},
+        "instance8.example.com":{length:6},
+        "instance74.example.com":{length:6},
+        "instance80.example.com":{length:6},
+        "instance85.example.com":{length:6},
+        "instance100.example.com":{length:6},
+        "instance70.example.com":{length:6},
+        "instance52.example.com":{length:6},
+        "instance27.example.com":{length:6},
+        "instance46.example.com":{length:6},
+        "instance24.example.com":{length:6},
+        "instance65.example.com":{length:6},
+        "instance58.example.com":{length:6},
+        "instance2.example.com":{length:6},
+        "instance53.example.com":{length:6},
+        "instance44.example.com":{length:6},
+        "node5.example.com":{length:15, width:3},
+        "node2.example.com":{length:15, width:3},
+        "node4.example.com":{length:15, width:5},
+        "node3.example.com":{length:15, width:9},
+      },
+      "node2.example.com":{
+        "instance19.example.com":{length:6},
+        "instance13.example.com":{length:6},
+        "instance99.example.com":{length:6},
+        "instance62.example.com":{length:6},
+        "instance38.example.com":{length:6},
+        "instance105.example.com":{length:6},
+        "instance32.example.com":{length:6},
+        "instance37.example.com":{length:6},
+        "instance1.example.com":{length:6},
+        "instance25.example.com":{length:6},
+        "instance94.example.com":{length:6},
+        "instance95.example.com":{length:6},
+        "instance12.example.com":{length:6},
+        "instance89.example.com":{length:6},
+        "instance61.example.com":{length:6},
+        "instance49.example.com":{length:6},
+        "instance83.example.com":{length:6},
+        "instance87.example.com":{length:6},
+        "instance90.example.com":{length:6},
+        "instance36.example.com":{length:6},
+        "instance18.example.com":{length:6},
+        "instance7.example.com":{length:6},
+        "instance39.example.com":{length:6},
+        "instance40.example.com":{length:6},
+        "instance4.example.com":{length:6},
+        "node5.example.com":{length:15, width:10},
+        "node4.example.com":{length:15, width:4},
+        "node1.example.com":{length:15, width:6},
+        "node3.example.com":{length:15, width:3},
+      },
+      "node3.example.com":{
+        "instance16.example.com":{length:6},
+        "instance102.example.com":{length:6},
+        "instance41.example.com":{length:6},
+        "instance67.example.com":{length:6},
+        "instance104.example.com":{length:6},
+        "instance34.example.com":{length:6},
+        "instance75.example.com":{length:6},
+        "instance50.example.com":{length:6},
+        "instance51.example.com":{length:6},
+        "instance23.example.com":{length:6},
+        "instance54.example.com":{length:6},
+        "instance26.example.com":{length:6},
+        "instance21.example.com":{length:6},
+        "instance63.example.com":{length:6},
+        "instance22.example.com":{length:6},
+        "instance14.example.com":{length:6},
+        "instance81.example.com":{length:6},
+        "instance17.example.com":{length:6},
+        "instance101.example.com":{length:6},
+        "instance28.example.com":{length:6},
+        "node5.example.com":{length:15, width:7},
+        "node2.example.com":{length:15, width:1},
+        "node4.example.com":{length:15, width:10},
+        "node1.example.com":{length:15, width:2},
+      },
+      "node4.example.com":{
+        "instance43.example.com":{length:6},
+        "instance107.example.com":{length:6},
+        "instance82.example.com":{length:6},
+        "instance57.example.com":{length:6},
+        "instance97.example.com":{length:6},
+        "instance48.example.com":{length:6},
+        "instance31.example.com":{length:6},
+        "instance76.example.com":{length:6},
+        "instance66.example.com":{length:6},
+        "instance29.example.com":{length:6},
+        "instance71.example.com":{length:6},
+        "instance33.example.com":{length:6},
+        "instance11.example.com":{length:6},
+        "instance60.example.com":{length:6},
+        "instance30.example.com":{length:6},
+        "instance106.example.com":{length:6},
+        "instance35.example.com":{length:6},
+        "instance78.example.com":{length:6},
+        "node5.example.com":{length:15, width:2},
+        "node2.example.com":{length:15, width:5},
+        "node1.example.com":{length:15, width:6},
+        "node3.example.com":{length:15, width:5},
+      },
+      "node5.example.com":{
+        "instance72.example.com":{length:6},
+        "instance73.example.com":{length:6},
+        "instance79.example.com":{length:6},
+        "instance108.example.com":{length:6},
+        "instance42.example.com":{length:6},
+        "instance92.example.com":{length:6},
+        "instance20.example.com":{length:6},
+        "instance88.example.com":{length:6},
+        "instance110.example.com":{length:6},
+        "instance96.example.com":{length:6},
+        "instance93.example.com":{length:6},
+        "instance6.example.com":{length:6},
+        "instance5.example.com":{length:6},
+        "instance77.example.com":{length:6},
+        "instance98.example.com":{length:6},
+        "instance86.example.com":{length:6},
+        "instance69.example.com":{length:6},
+        "instance84.example.com":{length:6},
+        "instance103.example.com":{length:6},
+        "instance64.example.com":{length:6},
+        "instance3.example.com":{length:6},
+        "instance15.example.com":{length:6},
+        "instance91.example.com":{length:6},
+        "instance68.example.com":{length:6},
+        "instance59.example.com":{length:6},
+        "instance9.example.com":{length:6},
+        "instance47.example.com":{length:6},
+        "node2.example.com":{length:15, width:12},
+        "node4.example.com":{length:15, width:3},
+        "node1.example.com":{length:15, width:4},
+        "node3.example.com":{length:15, width:3},
+      },
     }
 
 
