@@ -271,4 +271,4 @@ var GanetiGraphEdges = {
   },
 }
 
-// The Ganeti Cluster Graph Object (showing only the PrimaryNode - Instance relations)
+// The Ganeti Cluster Graph Object (showing only the PNode - Instance relations, PNode-SNode Relations)

@@ -1,4 +1,6 @@
-(function($){
+/* This script must be included at the end of an html page */
+
+//(function($){
   
   var Renderer = function(elt){
     // elt -> refers to an dom element.
@@ -38,7 +40,6 @@
         that._initMouseHandling()
       },
 
-      //(?)
       resize:function(){
         canvas.width = $(window).width()
         canvas.height = .75* $(window).height()
@@ -47,7 +48,7 @@
         that.redraw()
       },
 
-      //Then the .redraw method will be called each time the screen needs to be re-plotted.
+      //The .redraw method will be called each time the screen needs to be re-plotted.
       redraw:function(){
 
         gfx.clear()
@@ -248,26 +249,21 @@
     return that
   }
   
-  /*
-  var Nav = function(elt){
-    var dom = $(elt)
-    var _path = null
-    // <Removed_Some_Code: Check backup copy>
-  }
-  */
 
-  $(document).ready(function(){
+//})(this.jQuery)
 
-    // Nodes and GraphEdges must be defined before in graph_object_* file.
-    var theGraph = {
-      nodes: GanetiNodes,
-      edges: GanetiGraphEdges,
-    }
 
-    var sys = arbor.ParticleSystem()
-    sys.parameters({stiffness:900, repulsion:2000, gravity:true, dt:0.015})
-    sys.renderer = Renderer("#grapharea")
-    sys.graft(theGraph)
-    
-  })
-})(this.jQuery)
+//$(document).ready(function(){
+
+// Nodes and GraphEdges must be defined before in graph_object_* file.
+var theGraph = {
+  nodes: GanetiNodes,
+  edges: GanetiGraphEdges,
+}
+
+var sys = arbor.ParticleSystem()
+sys.parameters({stiffness:900, repulsion:2000, gravity:true, dt:0.015})
+sys.renderer = Renderer("#grapharea")
+sys.graft(theGraph)
+  
+//})
