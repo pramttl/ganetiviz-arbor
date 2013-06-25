@@ -35,17 +35,7 @@
                     padding:[36,60,36,60]
                    })
 
-        $(window).resize(that.resize)
-        that.resize()
         that._initMouseHandling()
-      },
-
-      resize:function(){
-        canvas.width = $(window).width()
-        canvas.height = .75* $(window).height()
-        sys.screen({size:{width:canvas.width, height:canvas.height}})
-        _vignette = null
-        that.redraw()
       },
 
       //The .redraw method will be called each time the screen needs to be re-plotted.
