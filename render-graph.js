@@ -152,13 +152,9 @@
             if (!nearest.node) return false
 
             if (nearest.node.data.shape!='dot'){
-              selected = (nearest.distance < 4) ? nearest : null
+              selected = (nearest.distance < 3) ? nearest : null
               if (selected){
-                 sys.tweenNode(selected.node,1,{color:"blue"})
-              }
-              else{
-                 dom.removeClass('linkable')
-                 window.status = ''
+                 sys.tweenNode(FullGraph[selected.node.name][1],1,{color:"blue"})
               }
             //TODO - Node list should be generated from the graph JS object.
             }else if ($.inArray(nearest.node.name, ['node1.example.com','node2.example.com','node3.example.com','node4.example.com','node5.example.com',]) >=0 ){
