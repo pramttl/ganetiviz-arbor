@@ -151,17 +151,16 @@
 
             if (!nearest.node) return false
 
-            
             if (nearest.node.data.shape!='dot'){
-              selected = (nearest.distance < 50) ? nearest : null
+              selected = (nearest.distance < 4) ? nearest : null
               if (selected){
-                 dom.addClass('linkable')
-                 // window.status = selected.node.data.link.replace(/^\//,"http://"+window.location.host+"/").replace(/^#/,'')
+                 sys.tweenNode(selected.node,1,{color:"blue"})
               }
               else{
                  dom.removeClass('linkable')
                  window.status = ''
               }
+            //TODO - Node list should be generated from the graph JS object.
             }else if ($.inArray(nearest.node.name, ['node1.example.com','node2.example.com','node3.example.com','node4.example.com','node5.example.com',]) >=0 ){
               if (nearest.node.name!=_section){
                 _section = nearest.node.name
