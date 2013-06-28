@@ -166,7 +166,7 @@
                   });
               }
             //TODO - Node list should be generated from the graph JS object.
-            }else if ($.inArray(nearest.node.name, ['node1.example.com','node2.example.com','node3.example.com','node4.example.com','node5.example.com',]) >=0 ){
+            }else if ($.inArray(nearest.node.name, GanetiNodes) >=0 ){
               if (nearest.node.name!=_section){
                 _section = nearest.node.name
                 that.switchSection(_section)
@@ -251,8 +251,8 @@
 
 // Nodes and GraphEdges must be defined before in graph_object_* file.
 var theGraph = {
-  nodes: GanetiNodes,
-  edges: GanetiGraphEdges,
+  nodes: GraphNodes,
+  edges: GraphEdges,
 }
 
 var sys = arbor.ParticleSystem()

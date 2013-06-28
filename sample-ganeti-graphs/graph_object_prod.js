@@ -5,7 +5,9 @@ var CLR = {
   ganetinodegroup:"#a7af00"
 }
 
-var GanetiNodes = {
+var GanetiNodes = ['node1.example.com','node2.example.com','node3.example.com','node4.example.com','node5.example.com',]
+
+var GraphNodes = {
   "node1.example.com":{color:CLR.ganetinode, shape:"dot", alpha:1},
   "instance55.example.com":{color:CLR.ganetivm, alpha:0},
   "instance45.example.com":{color:CLR.ganetivm, alpha:0},
@@ -128,7 +130,7 @@ var GanetiNodes = {
   }
 
 
-var GanetiGraphEdges = {
+var GraphEdges = {
   "node1.example.com":{
     "instance55.example.com":{length:6},
     "instance45.example.com":{length:6},
