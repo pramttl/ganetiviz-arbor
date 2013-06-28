@@ -23,6 +23,8 @@
         nearest = null,
         _mouseP = null;
 
+    // Highlighted Nodes
+    var hlt_nodes = [];
     
     //(?) What is that :o
     var that = {
@@ -152,9 +154,16 @@
             if (!nearest.node) return false
 
             if (nearest.node.data.shape!='dot'){
-              selected = (nearest.distance < 3) ? nearest : null
+              selected = (nearest.distance < 4) ? nearest : null
               if (selected){
-                 sys.tweenNode(FullGraph[selected.node.name][1],1,{color:"blue"})
+                  snode = FullGraph[selected.node.name][1]
+                  sys.tweenNode(snode,0.5,{color:"blue"})
+                  hlt_nodes.push(snode)
+              }else{
+                  // Tween Back for each node in hlt_nodes.
+                  hlt_nodes.forEach(function(hlt_node) {
+                      sys.tweenNode(hlt_node,0.1,{color:CLR.ganetinode})
+                  });
               }
             //TODO - Node list should be generated from the graph JS object.
             }else if ($.inArray(nearest.node.name, ['node1.example.com','node2.example.com','node3.example.com','node4.example.com','node5.example.com',]) >=0 ){
