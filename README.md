@@ -1,4 +1,4 @@
-# Client end code for visualising a Ganeti Cluster using HTML5, Javascript
+# Visualising a Ganeti Cluster Graph using HTML5, Javascript (using Arbor JS)
 
 The code makes use of the sample OSUOSL cluster configuration JSON and tries to 
 create graphical visualisations for the cluster graph  made avaialbe by Ramereth, 
@@ -33,6 +33,17 @@ like Apache, Nginx,etc.
 # Snapshots
 
 ![Unable to Load :(](http://webfuel.co.in/pranjal/test/images/ganetiviz_img2.png "Cluster with 5 nodes")
+
+# Example
+
+[http://webfuel.co.in/pranjal/cluster-mapping/] (Ganeti-Cluster-Mapping-Example)
+
+This illustrates some visualization strategies of a ganeti cluster network.
+
+* Nodes represented as DOTS and Instances represented as rectangular vertices.
+* Links between nodes show the number of failover possibilities between them. Edge thickness gives an idea of the number of such possibilities.
+* Hovering over a Node causes it to show all the "Instances" attached to it. (Primary Instances)
+* Hovering over an instance highlights its corresponding secondary node if any. (You will have to hover over the center of an instance vertex for this)
 
 # Copyright
 
