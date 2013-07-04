@@ -1,4 +1,4 @@
-# Visualising a Ganeti Cluster Graph using HTML5, Javascript (using Arbor JS)
+# Visualising a Ganeti Cluster Graph with HTML5, Javascript (using Arbor JS)
 
 The code makes use of the sample OSUOSL cluster configuration JSON and tries to 
 create graphical visualisations for the cluster graph  made avaialbe by Ramereth, 
