@@ -186,12 +186,6 @@
             
             /*
             if (nearest && selected && nearest.node===selected.node){
-              var link = selected.node.data.link
-              if (link.match(/^#/)){
-                 $(that).trigger({type:"navigate", path:link.substr(1)})
-              }else{
-                 window.location = link
-              }
               return false
             }
             */
